@@ -96,7 +96,7 @@ class e_pref extends e_front_model
 	 *
 	 * @param string $pref_name
 	 * @param mixed $default
-	 * @param integer $index
+	 * @param int $index
 	 * @return mixed
 	 */
 	public function getPref($pref_name = '', $default = null, $index = null)
@@ -507,7 +507,7 @@ class e_pref extends e_front_model
 	 * @param boolean $from_post merge post data
 	 * @param boolean $force
 	 * @param mixed $session_messages      null: normal messages displayed, true: session messages used, false: no messages displayed. 
-	 * @return boolean|integer 0 - no change, true - saved, false - error
+	 * @return boolean|int 0 - no change, true - saved, false - error
 	 */
 	public function save($from_post = true, $force = false, $session_messages = null)
 	{
@@ -619,7 +619,8 @@ class e_pref extends e_front_model
 				e107::includeLan(e_LANGUAGEDIR . e_LANGUAGE . '/admin/lan_admin.php');
 
 				$log->addSuccess(LAN_SETSAVED, ($session_messages === null || $session_messages === true));
-
+			//	$debug = debug_backtrace(null,2);
+			//	e107::getMessage()->addDebug(print_a($debug,true));
 				$uid = USERID;
 
 				if(empty($uid)) // Log extra details of any pref changes made by a non-user.
@@ -872,7 +873,7 @@ final class e_core_pref extends e_pref
 	 * If id not found this method returns false
 	 *
 	 * @param string $alias
-	 * @return string
+	 * @return string|false
 	 */
 	public function getConfigId($alias)
 	{
@@ -1158,7 +1159,7 @@ class prefs
 	 * Return current pref string $name from $table (only core for now)
 	 *
 	 * @param string $Name
-	 * @return  string pref value, slashes already stripped. FALSE on error
+	 * @return  string|false pref value, slashes already stripped. FALSE on error
 	 * @access  public
 	 */
 	function get($Name)

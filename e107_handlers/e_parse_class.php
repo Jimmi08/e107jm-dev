@@ -31,7 +31,7 @@ class e_parse
 	 *    1 = 'use mb_string'
 	 *    2 = emulation
 	 *
-	 * @var integer
+	 * @var int
 	 */
 	private $multibyte = false; // previously $utfAction
 
@@ -318,7 +318,7 @@ class e_parse
 	 * NOTE: can't be called until CHARSET is known
 	 * but we all know that it is UTF-8 now
 	 *
-	 * @return void
+	 * @return void|null
 	 */
 	public function setMultibyte($bool)
 	{
@@ -343,7 +343,7 @@ class e_parse
 	 * Unicode (UTF-8) analogue of standard @link http://php.net/strlen strlen PHP function.
 	 *
 	 * @param string $str The UTF-8 encoded string being measured for length.
-	 * @return integer The length (amount of UTF-8 characters) of the string on success, and 0 if the string is empty.
+	 * @return int The length (amount of UTF-8 characters) of the string on success, and 0 if the string is empty.
 	 */
 	public function ustrlen($str)
 	{
@@ -404,10 +404,10 @@ class e_parse
 	 *  of the first occurrence of needle in the haystack string.
 	 *
 	 * @param string  $haystack The UTF-8 encoded string being searched in.
-	 * @param integer $needle   The UTF-8 encoded string being searched for.
-	 * @param integer $offset   [optional] The optional offset parameter allows you to specify which character in haystack to start searching.
+	 * @param int     $needle   The UTF-8 encoded string being searched for.
+	 * @param int     $offset   [optional] The optional offset parameter allows you to specify which character in haystack to start searching.
 	 *                          The position returned is still relative to the beginning of haystack.
-	 * @return integer|boolean Returns the position as an integer. If needle is not found, the function will return boolean FALSE.
+	 * @return int|boolean Returns the position as an int. If needle is not found, the function will return boolean FALSE.
 	 */
 	public function ustrpos($haystack, $needle, $offset = 0)
 	{
@@ -428,10 +428,10 @@ class e_parse
 	 *  of the last occurrence of needle in the haystack string.
 	 *
 	 * @param string  $haystack The UTF-8 encoded string being searched in.
-	 * @param integer $needle   The UTF-8 encoded string being searched for.
-	 * @param integer $offset   [optional] - The optional offset parameter allows you to specify which character in haystack to start searching.
+	 * @param int     $needle   The UTF-8 encoded string being searched for.
+	 * @param int     $offset   [optional] - The optional offset parameter allows you to specify which character in haystack to start searching.
 	 *                          The position returned is still relative to the beginning of haystack.
-	 * @return integer|boolean Returns the position as an integer. If needle is not found, the function will return boolean FALSE.
+	 * @return int|boolean Returns the position as an int. If needle is not found, the function will return boolean FALSE.
 	 */
 	public function ustrrpos($haystack, $needle, $offset = 0)
 	{
@@ -449,7 +449,7 @@ class e_parse
 	 * Unicode (UTF-8) analogue of standard @link http://php.net/stristr stristr PHP function.
 	 *
 	 * @param string $haystack      The UTF-8 encoded string to search in.
-	 * @param mixed  $needle        If needle is not a string, it is converted to an integer and applied as the ordinal value of a character.
+	 * @param mixed  $needle        If needle is not a string, it is converted to an int and applied as the ordinal value of a character.
 	 * @param bool   $before_needle [optional] (PHP 5.3+) If TRUE, returns the part of the haystack before the first occurrence of the needle (excluding needle).
 	 * @return string Returns the matched substring. If needle is not found, returns FALSE.
 	 */
@@ -473,9 +473,9 @@ class e_parse
 	 *  Native substr() routine can return FALSE. mb_substr() and utf8_substr() just return an empty string.
 	 *
 	 * @param string  $str    The UTF-8 encoded string.
-	 * @param integer $start  Start of portion to be returned. Position is counted in amount of UTF-8 characters from the beginning of str.
+	 * @param int     $start  Start of portion to be returned. Position is counted in amount of UTF-8 characters from the beginning of str.
 	 *                        First character's position is 0. Second character position is 1, and so on.
-	 * @param integer $length [optional] If length is given, the string returned will contain at most length characters beginning from start
+	 * @param int     $length [optional] If length is given, the string returned will contain at most length characters beginning from start
 	 *                        (depending on the length of string). If length is omitted, the rest of string from start will be returned.
 	 * @return string The extracted UTF-8 encoded part of input string.
 	 */
@@ -1259,7 +1259,7 @@ class e_parse
 
 	/**
 	 * @param string  $text   String to truncate.
-	 * @param integer $length Length of returned string, including ellipsis.
+	 * @param int     $length Length of returned string, including ellipsis.
 	 * @param string  $ending It will be used as Ending and appended to the trimmed string.
 	 * @param boolean $exact  If false, $text will not be cut mid-word
 	 * @return string Trimmed string.
@@ -1366,7 +1366,7 @@ class e_parse
 
 	/**
 	 * @param string  $text string to process
-	 * @param integer $len  length of characters to be truncated
+	 * @param int     $len  length of characters to be truncated
 	 * @param string  $more string which will be added if truncation
 	 * @return string Always returns text.
 	 * @deprecated for public use. Will be made private. Use $tp->truncate() instead.
@@ -1895,7 +1895,7 @@ class e_parse
 		}
 		elseif (is_string($mixed))
 		{
-			return iconv('UTF-8', 'UTF-8//IGNORE', utf8_encode($mixed));
+			return iconv('UTF-8', 'UTF-8//IGNORE', mb_convert_encoding($mixed, 'UTF-8', 'ISO-8859-1'));
 		}
 
 		return $mixed;
@@ -2316,7 +2316,7 @@ class e_parse
 	/**
 	 * Retrieve img tag width and height attributes for current thumbnail.
 	 *
-	 * @return string
+	 * @return string|null
 	 */
 	public function thumbDimensions($type = 'single')
 	{
@@ -2385,7 +2385,7 @@ class e_parse
 	 *
 	 * @param string $path  The file path of the image whose alternate text is being cached.
 	 * @param string $value The alternate text value to cache.
-	 * @return string or false on failure
+	 * @return string|false String or false on failure
 	 */
 	public function setImageAltCacheFile($path, $value)
 	{
@@ -3343,7 +3343,7 @@ class e_parse
 
 			$replace = ((string) $mode === 'full' || (string) $mode === 'abs') ? $replace_absolute : $replace_relative;
 
-			return str_replace($search, $replace, $text);
+			return !empty($text) ? str_replace($search, $replace, $text) : $text;
 		}
 
 //		$pattern = ($all ? "#\{([A-Za-z_0-9]*)\}#s" : "#\{(e_[A-Z]*)\}#s");
@@ -3385,7 +3385,7 @@ class e_parse
 	 * Create and substitute e107 constants in passed URL
 	 *
 	 * @param string  $url
-	 * @param integer $mode 0-folders, 1-relative ('rel'), 2-absolute ('abs'), 3-full ('full') (with domain), 4-absolute & relative ('mix') (combination of 1,2,3)
+	 * @param int     $mode 0-folders, 1-relative ('rel'), 2-absolute ('abs'), 3-full ('full') (with domain), 4-absolute & relative ('mix') (combination of 1,2,3)
 	 * @return string
 	 */
 	public function createConstants($url, $mode = 0)
@@ -3957,7 +3957,7 @@ class e_parse
 	/**
 	 * Add leading zeros to a number. eg. 3 might become 000003
 	 *
-	 * @param $num       integer
+	 * @param $num       int
 	 * @param $numDigits - total number of digits
 	 * @return string number with leading zeros.
 	 */
@@ -3969,7 +3969,7 @@ class e_parse
 	/**
 	 * Generic variable translator for LAN definitions.
 	 *
-	 * @param                $lan  - string LAN
+	 * @param string $lan  - string LAN or LAN constant.
 	 * @param string | array $vals - either a single value, which will replace '[x]' or an array with key=>value pairs.
 	 * @return string
 	 * @example $tp->lanVars("My name is [x] and I own a [y]", array("John","Cat"));
@@ -3977,7 +3977,7 @@ class e_parse
 	 */
 	public function lanVars($lan, $vals, $bold = false)
 	{
-
+		$lan = defset($lan, $lan);
 		$array = (!is_array($vals)) ? array('x' => $vals) : $vals;
 
 		$search = array();
@@ -3997,6 +3997,17 @@ class e_parse
 		}
 
 		return str_replace($search, $replace, $lan);
+	}
+
+
+	public function lanLink($lan, $url, $options=[])
+	{
+		$srch =["[", "]"];
+		$repl = ["<a target='_blank' href='" .$url . "'>", "</a>"];
+
+		$text = defset($lan, $lan);
+
+		return str_replace($srch, $repl, $text);
 	}
 
 	/**
@@ -4659,8 +4670,9 @@ class e_parse
 	 *  'legacy'    => (array)		 Usually a legacy path like {e_FILE}
 	 *  'type'		=> (array)		 Force the returned image to be a jpg, webp etc.
 	 * ]
-	 * @return string
+	 *
 	 * @example $tp->toImage('welcome.png', array('legacy'=>{e_IMAGE}newspost_images/','w'=>200));
+	 * @return string|null
 	 */
 	public function toImage($file, $parm = array())
 	{
@@ -5237,9 +5249,9 @@ class e_parse
 	 * Display a Date in the browser.
 	 * Includes support for 'livestamp' (http://mattbradley.github.io/livestampjs/)
 	 *
-	 * @param integer $datestamp - unix timestamp
+	 * @param int     $datestamp - unix timestamp
 	 * @param string  $format    - short | long | relative
-	 * @return string converted date (html)
+	 * @return string|null converted date (html)
 	 */
 	public function toDate($datestamp = null, $format = 'short')
 	{
@@ -5489,11 +5501,7 @@ class e_parse
 		// Set it up for processing.
 
 		libxml_use_internal_errors(true);
-		if (function_exists('mb_convert_encoding'))
-		{
-			$html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
-
-		}
+		$html = mb_encode_numericentity($html, [0x80, 0xffff, 0, 0xffff], 'UTF-8');
 
 		//	$fragment = $doc->createDocumentFragment();
 		//	$fragment->appendXML($html);

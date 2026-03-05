@@ -800,7 +800,7 @@ class e_model extends e_object
      * @see _getData()
      * @param string $key
      * @param mixed $default
-     * @param integer $index
+     * @param int $index
      * @return mixed
      */
 	public function getData($key = '', $default = null, $index = null)
@@ -1794,7 +1794,7 @@ class e_model extends e_object
 	 * Shoud fix locale related troubles
 	 *
 	 * @param string $value
-	 * @return integer|float
+	 * @return int|float
 	 */
 	// moved to e_parse
 	// public function toNumber($value)
@@ -1937,7 +1937,7 @@ class e_front_model extends e_model
     protected $_optional_rules = array();
 
 	/**
-	 * @var integer Last SQL error number
+	 * @var int Last SQL error number
 	 */
 	protected $_db_errno = 0;
 
@@ -2085,7 +2085,7 @@ class e_front_model extends e_model
      * @see _getData()
      * @param string $key
      * @param mixed $default
-     * @param integer $index
+     * @param int $index
      * @return mixed
      */
 	public function getPostedData($key = '', $default = null, $index = null)
@@ -2103,7 +2103,7 @@ class e_front_model extends e_model
      *
      * @param string $key
      * @param string $default
-     * @param integer $index
+     * @param int $index
      * @return string
      */
     public function getIfPosted($key, $default = '', $index = null)
@@ -2451,7 +2451,7 @@ class e_front_model extends e_model
 	 *
 	 * @param string $message
 	 * @param string $field_title [optional]
-	 * @param integer $error_code [optional]
+	 * @param int $error_code [optional]
 	 * @return object
 	 */
 	public function addValidationError($message, $field_title = '', $error_code = 0)
@@ -2541,7 +2541,7 @@ class e_front_model extends e_model
     }
 
     /**
-     * @return integer last mysql error number
+     * @return int last mysql error number
      */
     public function getSqlErrorNumber()
     {
@@ -2859,7 +2859,7 @@ class e_front_model extends e_model
      * Save data to DB
      *
      * @param boolen $from_post
-     * @return boolean|integer
+     * @return boolean|int
      */
     public function save($from_post = true, $force = false, $session_messages = false)
     {
@@ -2886,7 +2886,7 @@ class e_front_model extends e_model
      * Update record
      * @see save()
      * @param boolen $from_post
-     * @return boolean|integer
+     * @return boolean|int
      *//*
     public function update($from_post = true, $force = false, $session_messages = false)
     {
@@ -3047,7 +3047,7 @@ class e_admin_model extends e_front_model
      *
      * @param boolen $from_post
 	 * @param boolean $session_messages
-	 * @return integer inserted ID or false on error
+	 * @return int inserted ID or false on error
      */
     public function insert($from_post = true, $session_messages = false)
     {
@@ -3082,7 +3082,7 @@ class e_admin_model extends e_front_model
     /**
      * Insert data to DB
      * @param boolean $session_messages to use or not session to store system messages
-     * @return integer
+     * @return int
      */
     protected function dbInsert($session_messages = false)
     {
@@ -3402,7 +3402,7 @@ class e_tree_model extends e_front_model
 	{
 		if(isset($array['total']))
 		{
-			$this->setTotal((integer) $array['total']);
+			$this->setTotal((int) $array['total']);
 			unset($array['total']);
 		}
 		$class_name = $this->getParam('model_class', 'e_model');
@@ -3459,7 +3459,7 @@ class e_tree_model extends e_front_model
 		// auto-load all
 		if(!$this->getParam('db_query') && $this->getModelTable())
 		{
-			$this->setParam('db_query', 'SELECT'.(!$this->getParam('nocount') ? ' SQL_CALC_FOUND_ROWS' : '')
+			$this->setParam('db_query', 'SELECT'.(!$this->getParam('nocount') ? '' : '')
 				.($this->getParam('db_cols') ? ' '.$this->getParam('db_cols') : ' *').' FROM #'.$this->getModelTable()
 				.($this->getParam('db_joins') ? ' '.$this->getParam('db_joins') : '')
 				.($this->getParam('db_where') ? ' WHERE '.$this->getParam('db_where') : '')
@@ -3687,20 +3687,31 @@ class e_tree_model extends e_front_model
 	 */
 	protected function countResults($sql)
 	{
-		$total = $sql->foundRows();
-		$this->_total = is_int($total) ? $total : false; //requires SQL_CALC_FOUND_ROWS in query - see db handler
+		$qry = $this->getParam('db_query');
+
+		// @todo Move to $sql->foundRows();
+
+		$qry = str_replace('SQL_CALC_FOUND_ROWS', '', $qry); // Deprecated as of MySQL 8.0
 
 		if(false === $this->_total && $this->getModelTable() && !$this->getParam('nocount'))
 		{
-			//SQL_CALC_FOUND_ROWS not found in the query, do one more query
-		//	$this->_total = e107::getDb()->db_Count($this->getModelTable()); // fails with specific listQry
+			$countQry = preg_replace('/\s+LIMIT\s+\d+(\s*,\s*\d+)?\s*$/i', "", $qry);
 
-			// Calculates correct total when using filters and search. //XXX Optimize.
-			$countQry = preg_replace('/(LIMIT ([\d,\s])*)$/', "", $this->getParam('db_query'));
+			$QRY = "SELECT COUNT(*) AS e_tree_total FROM ($countQry) AS grouped_rows";
 
-			$this->_total = e107::getDb()->gen($countQry);
+			$result = $sql->retrieve($QRY);
+			$total = $result['e_tree_total'] ?? 0;
+
+			if(E107_DEBUG_LEVEL == E107_DBG_SQLQUERIES)
+			{
+				e107::getMessage()->addDebug("Count Qry: ".str_replace('#',MPREFIX,$QRY));
+				e107::getMessage()->addDebug("Count Total: $total");
+			}
+
+			$this->_total = (int) $total;
 
 		}
+
 		return $this->_total;
 	}
 
@@ -3780,7 +3791,7 @@ class e_tree_model extends e_front_model
 
 	/**
 	 * Get single model instance from the collection
-	 * @param integer $node_id
+	 * @param int $node_id
 	 * @return e_model
 	 */
 	function getNode($node_id)
@@ -3791,7 +3802,7 @@ class e_tree_model extends e_front_model
 	/**
 	 * Add or remove (when $node is null) model to the collection
 	 *
-	 * @param integer $node_id
+	 * @param int $node_id
 	 * @param e_model $node
 	 * @return e_tree_model
 	 */
@@ -3810,7 +3821,7 @@ class e_tree_model extends e_front_model
 	/**
 	 * Check if model with passed id exists in the collection
 	 *
-	 * @param integer $node_id
+	 * @param int $node_id
 	 * @return boolean
 	 */
 	public function isNode($node_id)
@@ -3821,7 +3832,7 @@ class e_tree_model extends e_front_model
 	/**
 	 * Check if model with passed id exists in the collection and is not empty
 	 *
-	 * @param integer $node_id
+	 * @param int $node_id
 	 * @return boolean
 	 */
 	public function hasNode($node_id)
@@ -3952,7 +3963,7 @@ class e_tree_model extends e_front_model
 class e_front_tree_model extends e_tree_model
 {
 	/**
-	 * @var integer Last SQL error number
+	 * @var int Last SQL error number
 	 */
 	protected $_db_errno = 0;
 
@@ -3975,7 +3986,7 @@ class e_front_tree_model extends e_tree_model
     }
 
     /**
-     * @return integer last mysql error number
+     * @return int last mysql error number
      */
     public function getSqlErrorNumber()
     {
@@ -4014,7 +4025,7 @@ class e_front_tree_model extends e_tree_model
 	 * @param mixed $syncvalue value to be used for model data synchronization (db value could be something like '1-field_name'), null - no sync
 	 * @param boolean $sanitize [optional] default true
 	 * @param boolean $session_messages [optional] default false
-	 * @return integer updated count or false on error
+	 * @return int updated count or false on error
 	 */
 	public function batchUpdate($field, $value, $ids, $syncvalue = null, $sanitize = true, $session_messages = false)
 	{
@@ -4107,7 +4118,7 @@ class e_admin_tree_model extends e_front_tree_model
 	 * @param mixed $ids
 	 * @param boolean $destroy [optional] destroy object instance after db delete
 	 * @param boolean $session_messages [optional]
-	 * @return integer deleted records number or false on DB error
+	 * @return int deleted records number or false on DB error
 	 */
 	public function delete($ids, $destroy = true, $session_messages = false)
 	{

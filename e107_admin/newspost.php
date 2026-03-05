@@ -78,15 +78,15 @@ class news_admin extends e_admin_dispatcher
 
 	protected $adminMenu = array(
 		'main/list'			=> array('caption'=> LAN_LIST, 'icon'=>'fa-list'),
-		'main/create' 		=> array('caption'=> NWSLAN_45, 'icon'=> 'fa-plus'),  // Create/Edit News Item
-	//	'cat/list' 			=> array('caption'=> NWSLAN_46, 'perm' => '7'), // Category List
+		'main/create' 		=> array('caption'=> 'NWSLAN_45', 'icon'=> 'fa-plus'),  // Create/Edit News Item
+	//	'cat/list' 			=> array('caption'=> 'NWSLAN_46', 'perm' => '7'), // Category List
 		'other' 		=> array('divider'=> true),
-		'cat/list' 			=> array('caption'=> LAN_CATEGORIES, 'icon'=> 'folder'), // Create Category.
-		'cat/create' 		=> array('caption'=> LAN_NEWS_63, 'icon'=> 'fas-folder-plus'), // Category List
+		'cat/list' 			=> array('caption'=> 'LAN_CATEGORIES', 'icon'=> 'folder'), // Create Category.
+		'cat/create' 		=> array('caption'=> 'LAN_NEWS_63', 'icon'=> 'fas-folder-plus'), // Category List
 		'other2' 		=> array('divider'=> true),
-		'main/prefs' 	=> array('caption'=> LAN_PREFS, 'icon'=>'fa-cog'), // Preferences
-	//	'main/submitted'	=> array('caption'=> LAN_NEWS_64, 'perm' => 'N'), // Submitted News
-		'sub/list'			=> array('caption'=> NWSLAN_47, 'icon'=>'fa-user-edit'), // Submitted News
+		'main/prefs' 	=> array('caption'=> 'LAN_PREFS', 'icon'=>'fa-cog'), // Preferences
+	//	'main/submitted'	=> array('caption'=> 'LAN_NEWS_64', 'perm' => 'N'), // Submitted News
+		'sub/list'			=> array('caption'=> 'NWSLAN_47', 'icon'=>'fa-upload'), // Submitted News
 	//	'main/maint'		=> array('caption'=> LAN_NEWS_55, 'perm' => '0') // Maintenance
 	);
 
@@ -98,7 +98,7 @@ class news_admin extends e_admin_dispatcher
 		'cat/edit'	=> 'cat/list'
 	);
 
-	protected $menuTitle = ADLAN_0;
+	protected $menuTitle = 'ADLAN_0';
 
 	function init()
 	{
@@ -448,8 +448,8 @@ class news_admin_ui extends e_admin_ui
  		'news_thumbnail'		=> array('title' => NWSLAN_67, 		'type' => 'method', 'data'=>'str',	'width' => '110px',	'thclass' => 'center', 			'class' => "center", 		'nosort' => false, 'readParms'=>'thumb=60&thumb_urlraw=0&thumb_aw=60',  'readonly'=>false),
  		'news_title'			=> array('title' => LAN_TITLE, 		'type' => 'text',   'data'=>'safestr',  'filter'=>true,  'tab'=>0, 'writeParms'=> array('required'=> 1, 'size'=>'block-level'), 'inline'=>true,		'width' => 'auto', 'thclass' => '', 				'class' => null, 		'nosort' => false),
 		'news_summary'			=> array('title' => LAN_SUMMARY, 	'type' => 'text', 	'data'=>'safestr',  'filter'=>true, 'tab'=>0, 'inline'=>true, 'writeParms'=>'size=block-level',	'width' => 'auto', 	'thclass' => 'left', 				'class' => 'left', 		'nosort' => false),
-		'news_body'			    => array('title' => "", 	        'type' => 'method', 'data'=>'str',    'tab'=>0,  'nolist'=>true, 'writeParms'=>'nolabel=1',		'width' => 'auto', 	'thclass' => '',  'class' => null, 		'nosort' => false),
-		'news_extended'			=> array('title' => "", 	        'type' => null,     'data'=>'str', 'tab'=>0,  'nolist'=>true, 'noedit'=>true, 'writeParms'=>'nolabel=1',		'width' => 'auto', 	'thclass' => '',  'class' => null, 		'nosort' => false),
+		'news_body'			    => array('title' => "NWSLAN_13", 	        'type' => 'method', 'search'=>true, 'data'=>'str',    'tab'=>0,  'nolist'=>true, 'writeParms'=>'nolabel=1',		'width' => 'auto', 	'thclass' => '',  'class' => null, 		'nosort' => false),
+		'news_extended'			=> array('title' => "NWSLAN_14", 	        'type' => null,  'search'=>true,   'data'=>'str', 'tab'=>0,  'nolist'=>true, 'noedit'=>true, 'writeParms'=>'nolabel=1',		'width' => 'auto', 	'thclass' => '',  'class' => null, 		'nosort' => false),
 
 		'news_meta_title'	    => array('title' => LAN_META_TITLE, 	    'type' => 'text', 	  'data'=>'safestr', 'filter'=>true, 'tab'=>1,	'inline'=>true, 'width' => 'auto', 'help'=>'', 'writeParms'=>['size'=>'xxlarge', 'placeholder'=>'', 'counter'=>0,  'maxlength'=> 255], 	'nosort' => false),
 		'news_meta_keywords'	=> array('title' => LAN_KEYWORDS, 	'type' => 'tags', 	  'data'=>'safestr', 'filter'=>true, 'tab'=>1,	'inline'=>true, 'width' => 'auto', 	'thclass' => '', 				'class' => null, 		'nosort' => false, 'readParms'=>['maxlength'=>255,'maxItems'=>30], 'writeParms' => ['maxItems'=>30, 'maxlength'=>255]),

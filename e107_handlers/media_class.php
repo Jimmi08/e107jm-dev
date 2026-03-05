@@ -294,7 +294,7 @@ class e_media
 	 * 'class' data is optional, 'id' key is ignored
 	 * 
 	 * @param array $datas associative array, db keys should be passed without the leading 'media_cat_' e.g. 'class', 'type', etc.
-	 * @return integer last inserted ID or false on error
+	 * @return int last inserted ID or false on error
 	 */
 	public function createCategory($datas)
 	{
@@ -356,7 +356,7 @@ class e_media
 	/**
 	 * Create multiple media categories in once
 	 * @param array $multi_data
-	 * @return integer number of successfully inserted records
+	 * @return int number of successfully inserted records
 	 */
 	public function createCategories($multi_data)
 	{
@@ -598,8 +598,8 @@ class e_media
 	/**
 	 * Return an array of Images in a particular category
 	 * @param string $type : 16 | 32 | 48 | 64
-	 * @param integer $from
-	 * @param integer $amount
+	 * @param int $from
+	 * @param int $amount
 	 * @return array
 	 */
 	public function getIcons($type='', $from=0, $amount=null)
@@ -1409,7 +1409,8 @@ class e_media
 
 		$newpath = $this->checkFileExtension($newpath, $img_data['media_type']);
 
-		if(!rename($oldpath, $newpath)) // e_MEDIA.$newpath was working before. 
+
+		if(!is_file($oldpath) || !rename($oldpath, $newpath)) // e_MEDIA.$newpath was working before.
 		{
 			$this->log("Couldn't move file from ".realpath($oldpath)." to ".e_MEDIA.$newpath);
 			$mes->add("Couldn't move file from ".$oldpath." to ".$newpath, E_MESSAGE_ERROR);
@@ -1432,7 +1433,7 @@ class e_media
 		{		
 			$mes->add("Importing Media: ".$file, E_MESSAGE_SUCCESS);
 			$this->log("Importing Media: ".$file." successful");
-			return $img_data['media_url'];	
+			return $img_data['media_url'];
 		}
 		else
 		{
@@ -1458,7 +1459,7 @@ class e_media
 			return "_icon_svg";
 		}
 
-		$sizes = array(16,32,48,64);
+		$sizes = array(16,32,48,64,128);
 
 		$dimensions = $img['media_dimensions'];
 

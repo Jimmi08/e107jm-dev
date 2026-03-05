@@ -94,11 +94,11 @@ class plugman_adminArea extends e_admin_dispatcher
 
 	protected $adminMenu = array(
 
-		'installed/list'		=> array('caption'=> EPL_ADLAN_22, 'perm' => 'Z'),
-		'avail/list'			=> array('caption'=> EPL_ADLAN_23, 'perm' => 'Z'),
-		'online/grid'			=> array('caption'=> EPL_ADLAN_220, 'perm' => 'Z', 'icon'=>'fas-search'),
-		'avail/upload'			=> array('caption'=>EPL_ADLAN_38, 'perm' => '0'),
-		'create/build'          =>  array('caption'=>EPL_ADLAN_114, 'perm' => '0', 'icon'=>'fas-toolbox'),
+		'installed/list'		=> array('caption'=> 'EPL_ADLAN_22', 'perm' => 'Z', 'icon'=>'fa-plug-circle-check'),
+		'avail/list'			=> array('caption'=> 'EPL_ADLAN_23', 'perm' => 'Z', 'icon'=>'fa-plug-circle-xmark'),
+		'online/grid'			=> array('caption'=> 'EPL_ADLAN_220', 'perm' => 'Z', 'icon'=>'fas-search'),
+		'avail/upload'			=> array('caption'=>'EPL_ADLAN_38', 'perm' => '0'),
+		'create/build'          =>  array('caption'=>'EPL_ADLAN_114', 'perm' => '0', 'icon'=>'fas-toolbox'),
 
 	//	'main/create'		=> array('caption'=> LAN_CREATE, 'perm' => 'P'),
 
@@ -518,7 +518,8 @@ class plugin_ui extends e_admin_ui
 				return false;
 			}
 
-			e107::getSingleton('e107plugin')->refresh($id);
+			;
+			e107::getPlugin()->refresh($id);
 			e107::getLog()->add('PLUGMAN_04', $id);
 
 			e107::getMessage()->addSuccess("Repair Complete (".$id.")"); // Repair Complete ([x])
@@ -1297,7 +1298,7 @@ class plugin_online_ui extends e_admin_ui
 			$this->grid['template'] = '
 
 				 <div class="panel panel-primary" style="height:190px" >
-				 	<table class="table" style="height:180px;display:block" >
+				 	<table class="table" style="height:180px" >
 				 	<tr>
 				 	<td style="width:25%">
 					<div class="text-center" style="height:90px;">{IMAGE}

@@ -239,7 +239,7 @@ class e_file
 	 * @param string  $path
 	 * @param string  $fmask         [optional]
 	 * @param string  $omit          [optional]
-	 * @param integer $recurse_level [optional]
+	 * @param int     $recurse_level [optional]
 	 * @return array of file names/paths
 	 */
 	function get_files($path, $fmask = '', $omit = 'standard', $recurse_level = 0)
@@ -482,14 +482,16 @@ class e_file
 			if(class_exists('finfo')) // Best Mime detection method.
 			{
 				$fin = new finfo(FILEINFO_MIME);
-				list($mime, $other) = explode(";", $fin->file($path_to_file));
+				$result = $fin->file($path_to_file);
+                $parts = explode(";", $result);
+
+				$mime = trim($parts[0]);
 
 				if(!empty($mime))
 				{
 					$finfo['mime'] = $mime;
 				}
 
-				unset($other);
 
 			}
 
@@ -515,7 +517,7 @@ class e_file
 		}
 
 
-		if($imgcheck && ($tmp = getimagesize($path_to_file)))
+		if($imgcheck && is_file($path_to_file) && ($tmp = getimagesize($path_to_file)))
 		{
 			$finfo['img-width'] = $tmp[0];
 			$finfo['img-height'] = $tmp[1];
@@ -605,7 +607,7 @@ class e_file
 
 		$cu = curl_init();
 
-		$timeout = (integer) vartrue($options['timeout'], 10);
+		$timeout = (int) vartrue($options['timeout'], 10);
 		$timeout = min($timeout, 120);
 		$timeout = max($timeout, 3);
 
@@ -679,7 +681,7 @@ class e_file
 	 * FIXME add POST support
 	 * Get Remote contents
 	 * $options array:
-	 * - 'timeout' (integer): timeout in seconds
+	 * - 'timeout' (int): timeout in seconds
 	 * - 'post' (array|urlencoded string): POST data
 	 * - 'header' (array) headers, example: array('Content-Type: text/xml', 'X-Custom-Header: SomeValue');
 	 *
@@ -979,7 +981,7 @@ class e_file
 	 *
 	 * @param mixed   $size     file size in bytes or file path if $retrieve is true
 	 * @param boolean $retrieve defines the type of $size
-	 * @param integer $decimal
+	 * @param int     $decimal
 	 * @return string formatted size
 	 */
 	function file_size_encode($size, $retrieve = false, $decimal = 2)
@@ -1023,8 +1025,8 @@ class e_file
 	/** Recursive Chmod function.
 	 *
 	 * @param string  $path     to folder
-	 * @param integer $filemode perms for files
-	 * @param integer $dirmode  perms for directories
+	 * @param int     $filemode perms for files
+	 * @param int     $dirmode  perms for directories
 	 * @example chmod_R('mydir', 0644, 0755);
 	 */
 	function chmod($path, $filemode = 0644, $dirmode = 0755)
@@ -2587,7 +2589,7 @@ class e_file
 
 			if(($class === null && check_class($v['name'])) || (int) $class === (int) $v['name'])
 			{
-				$current_perms[$v['name']] = array('type' => $v['type'], 'maxupload' => $v['maxupload']);
+			//	$current_perms[$v['name']] = array('type' => $v['type'], 'maxupload' => $v['maxupload']);
 				$a_filetypes = explode(',', $v['type']);
 				foreach($a_filetypes as $ftype)
 				{
